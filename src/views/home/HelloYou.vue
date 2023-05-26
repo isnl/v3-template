@@ -1,7 +1,12 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue'
+import WaterMark from './WaterMark.vue'
+const wrapper = ref<HTMLElement>()
+
+onMounted(() => {})
+</script>
 <template>
-  <div class="w-200 h-100 mx-auto bg-#000">
-    <h3 class="text-#fff text-center font-400 text-20">Hello World</h3>
-    <h3 class="text-#fff text-center font-400 text-20">Hello You</h3>
+  <div class="w-200 h-100 mx-auto bg-#ccc relative" ref="wrapper">
+    <WaterMark />
   </div>
 </template>
