@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .wrapper {
+      width: 120px;
+      height: 80px;
+      background: #ccc;
+      margin: 100px auto;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrapper">
+
+  </div>
+
+</body>
+
+</html>
+<script>
+  // props: {
+  //   text: { type: String, default: '我是水印我是水印' },
+  // font: { type: String, default: '14px' },
+  // color: { type: String, default: 'rgba(0, 0, 0, 0.3)' },
+  // rotate: { type: Number, default: -40 },
+  // opacity: { type: Number, default: 0.5 },
+  // width: { type: Number, default: 120 },
+  // height: { type: Number, default: 80 }
+  // }
+  const props = {
+    text: '我是水印我是水印',
+    font: '16px',
+    color: 'rgba(0, 0, 0, 0.3)',
+    rotate: -40,
+    opacity: 0.5,
+    width: 120,
+    height: 80
+  }
+  const canvas = document.createElement('canvas')
+  canvas.width = props.width
+  canvas.height = props.height
+  const ctx = canvas.getContext('2d')
+  ctx.font = props.font
+  ctx.fillStyle = props.color
+  ctx.rotate((props.rotate * Math.PI) / 180)
+  ctx.fillText(props.text, -30, props.height)
+
+  document.querySelector('.wrapper').style.backgroundImage = `url(${canvas.toDataURL()})`
+  document.querySelector('.wrapper').style.opacity = String(props.opacity)
+</script>
