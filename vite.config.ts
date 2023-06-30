@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 // 引入Unocss
 import Unocss from 'unocss/vite'
-import { presetUno, presetAttributify, presetIcons } from 'unocss'
+import { presetUno, presetAttributify, presetIcons, transformerVariantGroup } from 'unocss'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,7 +22,8 @@ export default defineConfig({
           btl: 'b-t-1 b-t-solid b-t-gray-200 dark:b-t-gray-6',
           bll: 'b-l-1 b-l-solid b-l-gray-200 dark:b-l-gray-6'
         }
-      ]
+      ],
+      transformers: [transformerVariantGroup()]
     })
   ],
   build: {

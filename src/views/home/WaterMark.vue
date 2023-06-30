@@ -4,34 +4,70 @@
 
 <script setup lang="ts">
 // 找到父元素判断是否有position
-// TODO: 多行水印、多行水印对齐方式、zIndex、fillText的第2、3个参数
+// TODO: 多行水印对齐方式、zIndex
 // 方法: 更新、显示、隐藏、销毁、盲水印
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-const props = defineProps({
-  text: { type: String, default: '我是水印我是水印' },
-  font: { type: String, default: '14px' },
-  color: { type: String, default: 'rgba(0, 0, 0, 0.3)' },
-  rotate: { type: Number, default: -40 },
-  opacity: { type: Number, default: 0.5 },
-  width: { type: Number, default: 120 },
-  height: { type: Number, default: 80 }
-})
+interface Props {
+  options: {
+    text: string | string[]
+    fontSize: number
+    fontFamily: String
+    color: string
+    rotate: number
+    opacity: number
+    width: number
+    height: number
+  }
+  visible: boolean
+}
+const defaultOptions = {
+  text: '我是水印',
+  fontSize: 14,
+  fontFamily: 'Microsoft YaHei',
+  color: 'rgba(0, 0, 0, 0.3)',
+  rotate: -30,
+  opacity: 0.5,
+  width: 200,
+  height: 100
+}
 
+const props = defineProps<Props>()
 const wrapperRef = ref<HTMLElement | null>(null)
 
+watch(
+  () => props.visible,
+  (val) => {
+    wrapperRef.value!.style.display = val ? 'block' : 'none'
+  }
+)
+
 onMounted(() => {
+  let options: typeof defaultOptions | Props['options']
+  options = {
+    ...defaultOptions,
+    ...props.options
+  }
+  const { text, fontSize, fontFamily, color, rotate, opacity, width, height } = options
   const canvas = document.createElement('canvas')
-  canvas.width = props.width!
-  canvas.height = props.height!
+  canvas.width = width
+  canvas.height = height
   const ctx = canvas.getContext('2d')!
-  ctx.font = props.font!
-  ctx.fillStyle = props.color!
-  ctx.rotate((props.rotate! * Math.PI) / 180)
-  ctx.fillText(props.text!, 0, props.height)
+  ctx.font = `${fontSize}px ${fontFamily}`
+  ctx.fillStyle = color
+  ctx.rotate((rotate * Math.PI) / 180)
+  // 文本居中
+  ctx.textAlign = 'center'
+  if (Array.isArray(text)) {
+    text.forEach((item, index) => {
+      ctx.fillText(item, width / 2, height + 16 * index)
+    })
+  } else {
+    ctx.fillText(text!, 0, height)
+  }
 
   wrapperRef.value!.style.backgroundImage = `url(${canvas.toDataURL()})`
-  wrapperRef.value!.style.opacity = String(props.opacity!)
+  wrapperRef.value!.style.opacity = String(opacity!)
 })
 
 onBeforeUnmount(() => {
